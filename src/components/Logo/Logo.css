@@ -1,0 +1,11 @@
+.logo {
+	background: linear-gradient(89deg, #ff5edf 0%, #04C8DE 100%)
+}
+
+.container-div {
+	display: flex;
+	height: 100vh;
+	width: 100vw; 
+	align-items: center;
+	justify-content: center;
+}
