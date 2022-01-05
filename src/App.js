@@ -16,7 +16,7 @@ function App() {
     console.log(container);
   };
 
-  const particleOptions= {
+  const particlesOptions= {
     fpsLimit: 60,
     interactivity: {
       events: {
@@ -28,37 +28,37 @@ function App() {
       },
       modes: {
         bubble: {
-          distance: 50,
-          duration: 1,
+          distance: 25,
+          duration: 3,
           opacity: 0.5,
-          size: 40,
+          size: 300,
         },
         push: {
           quantity: 4,
         },
         repulse: {
-          distance: 100,
-          duration: 0.4,
+          distance: 80,
+          duration: 3,
         },
       },
     },
     particles: {
       color: {
-        value: "#000000",
+        value: "#fff",
       },
       links: {
-        color: "#000000",
-        distance: 150,
+        color: "#fff",
+        distance: 100,
         enable: true,
-        opacity: 0.5,
+        opacity: 0.1,
         width: 1,
       },
       move: {
         direction: "none",
         enable: true,
         outMode: "bounce",
-        random: false,
-        speed: 1,
+        random: true,
+        speed: 0.9,
         straight: false,
       },
       number: {
@@ -66,10 +66,10 @@ function App() {
           enable: true,
           area: 800,
         },
-        value: 80,
+        value: 100,
       },
       opacity: {
-        value: 0.5,
+        value: 0.1,
       },
       shape: {
         type: "circle",
@@ -89,7 +89,7 @@ function App() {
         id="tsparticles"
         init={particlesInit}
         loaded={particlesLoaded}
-        options={particleOptions}
+        options={particlesOptions}
       />
       <Navigation />
       <Logo />

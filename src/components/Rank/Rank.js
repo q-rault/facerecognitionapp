@@ -1,5 +1,3 @@
-import './Rank.css';
-
 const Rank = () => {
 	return (
 		<div>
