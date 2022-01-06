@@ -7,9 +7,9 @@
   justify-content: center;
 }
 
-.space-between {
+.space-around {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .particles {
   position: fixed;

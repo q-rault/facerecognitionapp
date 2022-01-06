@@ -1,0 +1,13 @@
+.output {
+	width: 500px;
+	height:  auto;
+}
+
+.bounding-box {
+    position: absolute;
+    box-shadow: 0 0 0 2px #149df2 inset;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+}
