@@ -7,6 +7,7 @@ import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Particles from "react-tsparticles";
 import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import {particlesOptions} from './components/particlesOptions/particlesOptions';
 import Clarifai from 'clarifai';
 
@@ -21,12 +22,11 @@ class App extends Component {
     this.state= {
       input: '',
       imageUrl: '',
-      boxes:[]
+      boxes:[],
+      route: 'signIn',
+      isSignedIn: false
     }
   }
-
-
-
 
   calculateFaceLocation = (region) => {
     // //top_row: 0.3466585, left_col: 0.19771752, bottom_row: 0.39750305, right_col: 0.25536698
@@ -42,13 +42,9 @@ class App extends Component {
     }
   }
 
-
   getAllFaces=(regions) => {
-    let boxes=[]
-    for (var i = 0; i < regions.length; i++) {
-      boxes[i]=this.calculateFaceLocation(regions[i],i);
-    }
-    return boxes
+    return !regions.length ? [] 
+    : regions.map((region, i) => this.calculateFaceLocation(region, i))
   }
 
   displayFaceBoxes = (boxes) => {
@@ -72,6 +68,29 @@ class App extends Component {
     .catch(err=> console.log("didn't work. ", err))
     }
 
+    onRouteChange = (route) => {
+      this.setState({route: route});
+      switch (route) {
+        case 'home' : return this.setState({isSignedIn:true});
+        default : return this.setState({isSignedIn:false})
+      }
+    }
+
+
+    routeContent = (route) =>{
+      switch (route) {
+        case 'signIn': return <SignIn onRouteChange={this.onRouteChange} />;
+        case 'register' : return <Register onRouteChange={this.onRouteChange} />;
+        default: return (
+          <div>
+            <Logo />
+            <Rank />
+            <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+            <FaceRecognition boxes={this.state.boxes} imageUrl={this.state.imageUrl} />
+          </div>
+          )
+      }
+    }
 
 
   render() {
@@ -82,12 +101,8 @@ class App extends Component {
           id="tsparticles" 
           options={particlesOptions}
         />
-        <SignIn />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-        <FaceRecognition boxes={this.state.boxes} imageUrl={this.state.imageUrl} />
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn} />
+        {this.routeContent(this.state.route)}
       </div>
     );
   }
