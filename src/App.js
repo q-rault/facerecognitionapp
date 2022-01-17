@@ -24,8 +24,31 @@ class App extends Component {
       imageUrl: '',
       boxes:[],
       route: 'signIn',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+      id: '',
+      name: '',
+      email: '',
+      entries: 0,
+      joined : ''
+      }
     }
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:3001')
+      .then(response => response.json())
+      .then(console.log)
+  }
+
+  loadUser = (data) => {
+    this.setState({ user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined :  data.joined
+    }})
   }
 
   calculateFaceLocation = (region) => {
@@ -55,16 +78,29 @@ class App extends Component {
     this.setState({input: event.target.value});
   }
 
-  onButtonSubmit= (event) => {
-    this.setState({imageUrl: this.state.input})
+  onPictureSubmit= (event) => {
+    this.setState({imageUrl: this.state.input});
     app.models
     .predict(
       Clarifai.FACE_DETECT_MODEL,
       this.state.input)
     .then(response => {
+      if (response) {
+        fetch('http://localhost:3001/image', {
+          method: 'put',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            id: this.state.user.id
+          })
+        })
+        .then(response => response.json())
+        .then(count => {
+          this.setState(Object.assign(this.state.user, {entries:count}))
+        })
+      }
       const regions= response.outputs[0].data.regions;
       this.displayFaceBoxes(this.getAllFaces(regions))
-      })
+    })
     .catch(err=> console.log("didn't work. ", err))
     }
 
@@ -79,13 +115,13 @@ class App extends Component {
 
     routeContent = (route) =>{
       switch (route) {
-        case 'signIn': return <SignIn onRouteChange={this.onRouteChange} />;
-        case 'register' : return <Register onRouteChange={this.onRouteChange} />;
+        case 'signIn': return <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />;
+        case 'register' : return <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />;
         default: return (
           <div>
             <Logo />
-            <Rank />
-            <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+            <Rank name={this.state.user.name} entries={this.state.user.entries} />
+            <ImageLinkForm onInputChange={this.onInputChange} onPictureSubmit={this.onPictureSubmit} />
             <FaceRecognition boxes={this.state.boxes} imageUrl={this.state.imageUrl} />
           </div>
           )
