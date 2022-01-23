@@ -1,13 +1,18 @@
+import Logo from '../Logo/Logo';
+import './Navigation.css';
+
 const Navigation = ({onRouteChange, isSignedIn}) => {
 	return (isSignedIn ?
-		<nav style={{display: 'flex', justifyContent: 'flex-end'}}>
+		<nav>
+			<Logo />
 			<p onClick={() => onRouteChange('signIn')}
 			className='f3 link dim black underline pa3 pointer'>
 				{'Sign Out'}
 			</p>
 		</nav>
 	:
-		<nav style={{display: 'flex', justifyContent: 'flex-end'}}>
+		<nav>
+			<Logo />
 			<p onClick={() => onRouteChange('signIn')} className='f3 link dim black underline pa3 pointer'>
 				{'Sign In'}
 			</p>

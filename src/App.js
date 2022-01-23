@@ -1,7 +1,7 @@
 import React,{ Component } from 'react';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
-import Logo from './components/Logo/Logo';
+// import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
@@ -119,7 +119,6 @@ class App extends Component {
         case 'register' : return <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />;
         default: return (
           <div>
-            <Logo />
             <Rank name={this.state.user.name} entries={this.state.user.entries} />
             <ImageLinkForm onInputChange={this.onInputChange} onPictureSubmit={this.onPictureSubmit} />
             <FaceRecognition boxes={this.state.boxes} imageUrl={this.state.imageUrl} />
