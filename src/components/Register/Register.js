@@ -1,5 +1,7 @@
 import React,{ Component } from 'react';
 
+//const apiUrl="https://evening-headland-35314.herokuapp.com/";
+
 class Register extends Component {
 	constructor(props) {
 	    super(props);
@@ -26,7 +28,7 @@ class Register extends Component {
     }
 
     onSubmitRegister= (event) => {
-	    fetch('http://localhost:3001/register', {
+	    fetch('https://evening-headland-35314.herokuapp.com/register', {
 	    	method: 'post',
 	    	headers: {'Content-Type': 'application/json'},
 	    	body: JSON.stringify({
@@ -44,6 +46,7 @@ class Register extends Component {
 	      })
     	
     }
+
     render() {
     	const {onRouteChange}=this.props
 		return (

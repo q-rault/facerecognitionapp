@@ -10,6 +10,8 @@ import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import {particlesOptions} from './components/particlesOptions/particlesOptions';
 
+//https://evening-headland-35314.herokuapp.com/
+
 const initialState = {
   input: '',
   imageUrl: '',
@@ -32,7 +34,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3001')
+    fetch('https://evening-headland-35314.herokuapp.com/')
       .then(response => response.json())
       .then(console.log)
   }
@@ -76,7 +78,7 @@ class App extends Component {
 
   onPictureSubmit= (event) => {
     this.setState({imageUrl: this.state.input});
-    fetch('http://localhost:3001/imageUrl', {
+    fetch('https://evening-headland-35314.herokuapp.com/imageUrl', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
@@ -86,7 +88,7 @@ class App extends Component {
     .then(response => response.json())
     .then(response => {
       if (response) {
-        fetch('http://localhost:3001/image', {
+        fetch('https://evening-headland-35314.herokuapp.com/image', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
