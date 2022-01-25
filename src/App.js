@@ -9,30 +9,26 @@ import Particles from "react-tsparticles";
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import {particlesOptions} from './components/particlesOptions/particlesOptions';
-import Clarifai from 'clarifai';
 
-
-const app = new Clarifai.App({
- apiKey: '1946c7b64ee7412197d89a5952179c2c'
-});
+const initialState = {
+  input: '',
+  imageUrl: '',
+  boxes:[],
+  route: 'signIn',
+  isSignedIn: false,
+  user: {
+  id: '',
+  name: '',
+  email: '',
+  entries: 0,
+  joined : ''
+  }  
+};
 
 class App extends Component {
   constructor() {
     super();
-    this.state= {
-      input: '',
-      imageUrl: '',
-      boxes:[],
-      route: 'signIn',
-      isSignedIn: false,
-      user: {
-      id: '',
-      name: '',
-      email: '',
-      entries: 0,
-      joined : ''
-      }
-    }
+    this.state= initialState;
   }
 
   componentDidMount() {
@@ -80,10 +76,14 @@ class App extends Component {
 
   onPictureSubmit= (event) => {
     this.setState({imageUrl: this.state.input});
-    app.models
-    .predict(
-      Clarifai.FACE_DETECT_MODEL,
-      this.state.input)
+    fetch('http://localhost:3001/imageUrl', {
+              method: 'post',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                input: this.state.input
+              })
+            })
+    .then(response => response.json())
     .then(response => {
       if (response) {
         fetch('http://localhost:3001/image', {
@@ -97,35 +97,37 @@ class App extends Component {
         .then(count => {
           this.setState(Object.assign(this.state.user, {entries:count}))
         })
+        .catch(console.log)
       }
       const regions= response.outputs[0].data.regions;
       this.displayFaceBoxes(this.getAllFaces(regions))
     })
     .catch(err=> console.log("didn't work. ", err))
-    }
+  }
 
-    onRouteChange = (route) => {
-      this.setState({route: route});
-      switch (route) {
-        case 'home' : return this.setState({isSignedIn:true});
-        default : return this.setState({isSignedIn:false})
-      }
+  onRouteChange = (route) => {
+    this.setState({route: route});
+    switch (route) {
+      case 'signOut' : return this.setState(initialState);
+      case 'home' : return this.setState({isSignedIn:true});
+      default : return this.setState({route:route})
     }
+  }
 
 
-    routeContent = (route) =>{
-      switch (route) {
-        case 'signIn': return <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />;
-        case 'register' : return <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />;
-        default: return (
-          <div>
-            <Rank name={this.state.user.name} entries={this.state.user.entries} />
-            <ImageLinkForm onInputChange={this.onInputChange} onPictureSubmit={this.onPictureSubmit} />
-            <FaceRecognition boxes={this.state.boxes} imageUrl={this.state.imageUrl} />
-          </div>
-          )
-      }
+  routeContent = (route) =>{
+    switch (route) {
+      case 'signIn': return <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />;
+      case 'register' : return <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />;
+      default: return (
+        <div>
+          <Rank name={this.state.user.name} entries={this.state.user.entries} />
+          <ImageLinkForm onInputChange={this.onInputChange} onPictureSubmit={this.onPictureSubmit} />
+          <FaceRecognition boxes={this.state.boxes} imageUrl={this.state.imageUrl} />
+        </div>
+        )
     }
+  }
 
 
   render() {
