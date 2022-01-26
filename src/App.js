@@ -10,8 +10,6 @@ import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import {particlesOptions} from './components/particlesOptions/particlesOptions';
 
-//https://evening-headland-35314.herokuapp.com/
-
 const initialState = {
   input: '',
   imageUrl: '',
